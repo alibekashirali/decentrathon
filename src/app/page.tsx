@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button"
 import Link from 'next/link'
 import { Puzzle, Hash, BookOpen } from 'lucide-react'
 
-// import sequence_safari from './sequence-safari'
+export const metadata = {
+  title: 'Sequence Learning',
+  description: 'Learn about sequences in a fun way!',
+};
 
 export default function Home() {
   return (
     <Layout>
-      <h1 className="text-4xl font-bold text-center mb-8">Welcome to Sequence Learning!</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader>
