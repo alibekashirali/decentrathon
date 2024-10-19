@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button"
 import Link from 'next/link'
 import { Puzzle, Hash, BookOpen } from 'lucide-react'
 
+// import sequence_safari from './sequence-safari'
+
 export default function Home() {
   return (
     <Layout>
