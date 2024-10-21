@@ -38,9 +38,9 @@ export default function Layout({ children }: { children: ReactNode }) {
             </nav>
           </div>
         </header>
-        <main className="flex-grow container mx-auto px-4 py-8">
+        <div className="flex-grow container mx-auto px-4 py-8">
           {children}
-        </main>
+        </div>
         <footer className="border-t">
           <div className="container mx-auto px-4 py-4 text-center text-sm text-muted-foreground">
             © 2024 Sequence Learning. All rights reserved.

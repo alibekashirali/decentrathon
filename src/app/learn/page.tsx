@@ -17,7 +17,7 @@ export default function Learn() {
     try {
       const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY); // Use environment variable
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      const result = await model.generateContent(["Explain how AI works"]);
+      const result = await model.generateContent(["Explain how I can improve my sequence strategy and technique. Give me a plan for me"]);
       const generatedText = result.response.text();
       setAiContent(generatedText);
     } catch (error) {
