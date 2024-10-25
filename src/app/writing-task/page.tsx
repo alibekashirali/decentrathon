@@ -108,8 +108,8 @@ export default function AITaskGenerator() {
   }, []);
 
   return (
-    <div className="flex gap-4">
-      <Card className="w-full max-w-2xl">
+    <div className="flex flex-col md:flex-row gap-4">
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Generated Writing Task</CardTitle>
           <CardDescription>Complete the task using the suggested vocabulary</CardDescription>

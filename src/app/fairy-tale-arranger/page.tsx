@@ -100,7 +100,7 @@ export default function FairyTaleArranger() {
   return (
     <div className="p-4 max-w-md mx-auto">
       <h1 className="text-2xl font-bold mb-4">Fairy Tale Arranger</h1>
-      <p className="mb-4">Arrange the events of Little Red Riding Hood in the correct order.</p>
+      <p className="mb-4">Arrange the events of given story in the correct order.</p>
       {loading ? (
         <p>Loading story...</p>
       ) : (
