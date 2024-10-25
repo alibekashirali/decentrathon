@@ -1,8 +1,7 @@
-import Layout from './layout'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from 'next/link'
-import { Puzzle, Hash, BookOpen } from 'lucide-react'
+import { Puzzle, Hash, BookOpen, PenTool } from 'lucide-react'
 
 export const metadata = {
   title: 'Sequence Learning',
@@ -12,7 +11,7 @@ export const metadata = {
 export default function Home() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <Card>
+    {/* <Card>
       <CardHeader>
         <CardTitle className="flex items-center">
           <Puzzle className="mr-2 h-6 w-6" />
@@ -39,7 +38,7 @@ export default function Home() {
           <Button>Play Now</Button>
         </Link>
       </CardContent>
-    </Card>
+    </Card> */}
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center">
@@ -50,6 +49,20 @@ export default function Home() {
       <CardContent>
         <p className="mb-4">Arrange story events in the correct order.</p>
         <Link href="/fairy-tale-arranger">
+          <Button>Play Now</Button>
+        </Link>
+      </CardContent>
+    </Card>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center">
+          <PenTool className="mr-2 h-6 w-6" />
+          Writing Task
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="mb-4">Try Writing Task for improving skill.</p>
+        <Link href="/writing-task">
           <Button>Play Now</Button>
         </Link>
       </CardContent>

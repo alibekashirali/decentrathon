@@ -26,14 +26,14 @@ export default function Layout({ children }: { children: ReactNode }) {
                     </Button>
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link href="/learn">
                     <Button variant="ghost">
                       <BookOpen className="mr-2 h-4 w-4" />
                       Learn
                     </Button>
                   </Link>
-                </li>
+                </li> */}
               </ul>
             </nav>
           </div>

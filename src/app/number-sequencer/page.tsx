@@ -1,12 +1,11 @@
-// src/app/sequence-safari/page.tsx
+"use client"; // Add this line to mark this file as a Client Component
 
 "use client"; // Add this line to mark this file as a Client Component
 
 import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { GoogleGenerativeAI } from "@google/generative-ai"; // Import your AI library
-
+import { GoogleGenerativeAI } from "@google/generative-ai"
 
 export default function NumberSequencer() {
   const [sequence, setSequence] = useState([])
@@ -17,11 +16,14 @@ export default function NumberSequencer() {
   const [attempts, setAttempts] = useState(0)
   const [score, setScore] = useState(0)
   const [aiContent, setAiContent] = useState('') // State to store AI content
-  const [loading, setLoading] = useState(false); // State for loading
+  const [loading, setLoading] = useState(false) // State for loading
+  const [showHint, setShowHint] = useState(false) // Power-up state
+  const [progress, setProgress] = useState(0) // Progress bar state
 
   useEffect(() => {
     generateSequence()
     setRecommendation('Tip: Try to remember the correct order from the previous round.')
+    updateProgress()
   }, [level])
 
   const generateSequence = () => {
@@ -30,6 +32,7 @@ export default function NumberSequencer() {
     setPlayerSequence([])
     setMessage('')
     setAttempts(0)  // Reset attempts for each level
+    setShowHint(false) // Reset hint power-up
   }
 
   const handleNumberClick = (number) => {
@@ -65,6 +68,8 @@ export default function NumberSequencer() {
       // Generate AI content based on performance
       await generateContent(newScore, attempts);
       setLevel(level + 1);
+      updateProgress(); // Update progress bar
+
     } else {
       setMessage('Not quite right. Try again!');
       setRecommendation('Tip: Pay attention to the order of the numbers.');
@@ -92,16 +97,36 @@ export default function NumberSequencer() {
     }
   }
 
+  const updateProgress = () => {
+    const newProgress = (level / 10) * 100; // Assuming there are 10 levels
+    setProgress(newProgress);
+  }
+
+  const handleHint = () => {
+    if (!showHint) {
+      setShowHint(true);
+      const nextNumber = sequence[playerSequence.length]; // Next correct number in the sequence
+      setRecommendation(`Hint: The next number is ${nextNumber}`);
+    }
+  }
+
   return (
     <div className="p-4 max-w-md mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Number Sequencer</h1>
+      <h1 className="text-2xl font-bold mb-4">Number Sequencer Safari</h1>
       <p className="mb-4">Arrange the numbers in ascending order. Current level: {level}</p>
       <p className="mb-4">Your score: {score}</p>
+
+      {/* Progress Bar */}
+      <div className="w-full bg-gray-300 rounded-full mb-4">
+        <div className="bg-blue-500 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${progress}%` }}>Level Progress</div>
+      </div>
+
+      {/* Number sequence cards */}
       <div className="flex flex-wrap gap-2 mb-4">
         {sequence.map(number => (
           <Card 
             key={number} 
-            className={`cursor-pointer ${playerSequence.includes(number) ? 'border-primary' : ''}`}
+            className={`cursor-pointer transform ${playerSequence.includes(number) ? 'border-primary scale-110' : ''}`}
             onClick={() => handleNumberClick(number)}
           >
             <CardContent className="p-4">
@@ -110,7 +135,16 @@ export default function NumberSequencer() {
           </Card>
         ))}
       </div>
+
       <Button onClick={checkSequence} className="mb-4">Check Sequence</Button>
+
+      {/* Hint button */}
+      {!showHint && (
+        <Button onClick={handleHint} className="ml-2 mb-4">
+          Use Hint (1 per level)
+        </Button>
+      )}
+
       {message && <p className="text-lg font-semibold">{message}</p>}
 
       {/* AI Assistant Recommendation Box */}
@@ -127,6 +161,10 @@ export default function NumberSequencer() {
           <p>{aiContent}</p>
         </div>
       )}
+
+      {/* Sound Effects */}
+      <audio id="correct-sound" src="/sounds/correct.mp3"></audio>
+      <audio id="incorrect-sound" src="/sounds/incorrect.mp3"></audio>
     </div>
   )
 }
