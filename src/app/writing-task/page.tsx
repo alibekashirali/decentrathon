@@ -11,7 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import ReactMarkdown from "react-markdown";
 
 import { GoogleGenerativeAI } from "@google/generative-ai"
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY ?? "");
 
 interface Task {
   task: string;

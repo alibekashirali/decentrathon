@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from 'next/link'
-import { Puzzle, Hash, BookOpen, PenTool } from 'lucide-react'
+import { BookOpen, PenTool } from 'lucide-react'
 
 export const metadata = {
   title: 'Sequence Learning',

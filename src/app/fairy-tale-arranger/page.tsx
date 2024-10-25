@@ -1,36 +1,41 @@
-// src/app/fairy-tale-arranger/page.tsx
-
 "use client"; // Add this line to mark this file as a Client Component
 
-import { useState, useEffect } from 'react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Shuffle } from 'lucide-react'
+import { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Shuffle } from 'lucide-react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+// Define the interface for the story segment
+interface StorySegment {
+  id: number;
+  text: string;
+}
+
 export default function FairyTaleArranger() {
-  const [story, setStory] = useState([])
-  const [originalStory, setOriginalStory] = useState([])
-  const [playerSequence, setPlayerSequence] = useState([])
-  const [message, setMessage] = useState('')
-  const [loading, setLoading] = useState(false) // Loading state
-  const [aiContent, setAiContent] = useState('') // State for AI content
-  const [score, setScore] = useState(0) // Score state
+  // Define the state with the correct types
+  const [story, setStory] = useState<StorySegment[]>([]);
+  const [originalStory, setOriginalStory] = useState<StorySegment[]>([]);
+  const [playerSequence, setPlayerSequence] = useState<StorySegment[]>([]);
+  const [message, setMessage] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false); // Loading state
+  const [aiContent, setAiContent] = useState<string>(''); // State for AI content
+  const [score, setScore] = useState<number>(0); // Score state
 
   useEffect(() => {
     fetchStory();
-  }, [])
+  }, []);
 
   const fetchStory = async () => {
     setLoading(true); // Start loading
     try {
-      const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+      const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY ?? "");
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      
+
       // Generate a short story divided into 8 parts
       const result = await model.generateContent(["Generate a short story no more than 100 words about something interesting for children where should be 9-10 sentences and no more 12 words in one sentence."]);
       const generatedText = result.response.text();
-      
+
       const splitStory = generatedText.split('.').map((sentence, index) => ({
         id: index + 1,
         text: sentence.trim() + (sentence.trim().endsWith('.') ? '' : '.') // Ensure each sentence ends with a period
@@ -46,25 +51,25 @@ export default function FairyTaleArranger() {
     } finally {
       setLoading(false); // Stop loading
     }
-  }
+  };
 
-  const shuffleStory = (storyToShuffle) => {
+  const shuffleStory = (storyToShuffle: StorySegment[]) => {
     setStory([...storyToShuffle].sort(() => Math.random() - 0.5));
     setPlayerSequence([]);
     setMessage('');
-  }
+  };
 
-  const handleCardClick = (card) => {
+  const handleCardClick = (card: StorySegment) => {
     if (playerSequence.includes(card)) {
       setPlayerSequence(playerSequence.filter(item => item.id !== card.id));
     } else {
       setPlayerSequence([...playerSequence, card]);
     }
-  }
+  };
 
   const checkSequence = async () => {
     const isCorrect = playerSequence.every((card, index) => card.id === index + 1);
-    
+
     if (isCorrect) {
       setMessage("Correct! You've arranged the story perfectly!");
       setScore(score + 10); // Increase score
@@ -72,14 +77,14 @@ export default function FairyTaleArranger() {
       setMessage("Not quite right. Try rearranging the events.");
       await generateContent(playerSequence); // Generate AI content based on the player's current arrangement
     }
-  }
+  };
 
-  const generateContent = async (currentSequence) => {
+  const generateContent = async (currentSequence: StorySegment[]) => {
     setLoading(true); // Start loading state
     const prompt = `Given the arrangement of the story segments: ${currentSequence.map(card => card.text).join(', ')}, what are the mistakes and how should the sequence be arranged correctly? no more 100 words for recommendation`;
-    
+
     try {
-      const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY); // Use environment variable
+      const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY ?? ""); // Use environment variable
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       const result = await model.generateContent([prompt]);
       const generatedText = result.response.text();
@@ -90,7 +95,7 @@ export default function FairyTaleArranger() {
     } finally {
       setLoading(false); // Stop loading
     }
-  }
+  };
 
   return (
     <div className="p-4 max-w-md mx-auto">
@@ -130,5 +135,5 @@ export default function FairyTaleArranger() {
         </div>
       )}
     </div>
-  )
+  );
 }

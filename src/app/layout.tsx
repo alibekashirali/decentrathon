@@ -2,7 +2,8 @@ import { ReactNode } from 'react';
 import './globals.css'; // Import your global styles
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
-import { Home, BookOpen } from 'lucide-react';
+// import { Home, BookOpen } from 'lucide-react';
+import { Home } from 'lucide-react';
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
