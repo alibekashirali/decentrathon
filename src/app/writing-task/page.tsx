@@ -31,6 +31,7 @@ export default function AITaskGenerator() {
   const [isFinished, setIsFinished] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [essay, setEssay] = useState('');
+  const [wordCount, setWordCount] = useState(0);  // Add wordCount state
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [isFeedbackLoading, setIsFeedbackLoading] = useState(false);
 
@@ -38,6 +39,7 @@ export default function AITaskGenerator() {
     setIsLoading(true);
     setError(null);
     setEssay('');
+    setWordCount(0);  // Reset word count on new task generation
     setFeedback(null);
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -79,7 +81,6 @@ export default function AITaskGenerator() {
     setIsFeedbackLoading(true);
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      // const prompt = `Analyze the following IELTS essay that must be based on this task: "${currentTask}" and provide feedback. Format the response as JSON with 'overallFeedback', 'bandScore', and 'improvements' fields. Essay: "${essay}"`;
       const prompt = `Imagine that you strict IELTS Examiner and you are tasked with analyzing an IELTS essay based on the task: "${currentTask}". Your goal is to provide feedback on how well the essay meets the requirements of the task. Your response should include an 'overallFeedback' section summarizing the strengths and weaknesses of the essay, a 'bandScore' section estimating the likely IELTS band score (based on the task response, coherence, lexical resource, and grammar), and an 'improvements' section outlining specific areas where the essay can be enhanced. Please format your response as a JSON object with 'overallFeedback', 'bandScore', and 'improvements' fields. Here is the essay: "${essay}"`;
       const result_feedback = await model.generateContent([prompt]);
 
@@ -102,6 +103,12 @@ export default function AITaskGenerator() {
       setIsFeedbackLoading(false);
     }
   };
+
+  // Update word count whenever essay changes
+  useEffect(() => {
+    const words = essay.trim().split(/\s+/).filter(Boolean);
+    setWordCount(words.length);
+  }, [essay]);
 
   useEffect(() => {
     generateTask();
@@ -145,6 +152,9 @@ export default function AITaskGenerator() {
                   onChange={(e) => setEssay(e.target.value)}
                   className="min-h-[300px]"
                 />
+                <p className="text-right mt-2 text-sm text-muted-foreground">
+                  Word Count: {wordCount}
+                </p>
               </div>
             </>
           ) : null}
@@ -193,7 +203,7 @@ export default function AITaskGenerator() {
               <div>
                 <h3 className="font-semibold mb-2">Areas for Improvement:</h3>
                 <ReactMarkdown>
-                  {Array.isArray(feedback?.improvements)
+                {Array.isArray(feedback?.improvements)
                     ? feedback.improvements.map((improvement) => `- ${improvement}`).join("\n")
                     : "No improvements available"}
                 </ReactMarkdown>
@@ -205,7 +215,6 @@ export default function AITaskGenerator() {
         )}
       </CardContent>
     </Card>
-
-    </div>
+  </div>
   )
 }
