@@ -25,7 +25,7 @@ interface Feedback {
 }
 
 export default function AITaskGenerator() {
-  const [timeLeft, setTimeLeft] = useState(1200) // 20 minutes
+  const [timeLeft, setTimeLeft] = useState(2400) // 20 minutes
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
