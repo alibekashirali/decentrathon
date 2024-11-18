@@ -43,7 +43,7 @@ export default function AITaskGenerator() {
     setFeedback(null);
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      const prompt = "Generate an IELTS writing task with 5 relevant vocabulary words. Format the response as JSON with 'task' and 'vocabularies' fields.";
+      const prompt = "Generate an IELTS writing task with 5 relevant vocabulary words. Format the response as JSON with only 'task' and 'vocabularies' fields (in the field of vocabularies provide only 5 words).";
       const result = await model.generateContent([prompt]);
       const text = result.response.text()
       const startIndex = text.indexOf('{');
@@ -53,7 +53,7 @@ export default function AITaskGenerator() {
         const jsonString = text.slice(startIndex, endIndex);
 
         const jsonResponse = JSON.parse(jsonString);
-        console.log(jsonResponse);
+        // console.log(jsonResponse);
         setCurrentTask(jsonResponse);
       } else {
         console.error("No JSON found");
@@ -81,7 +81,7 @@ export default function AITaskGenerator() {
     setIsFeedbackLoading(true);
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      const prompt = `Imagine that you strict IELTS Examiner and you are tasked with analyzing an IELTS essay based on the task: "${currentTask}". Your goal is to provide feedback on how well the essay meets the requirements of the task. Your response should include an 'overallFeedback' section summarizing the strengths and weaknesses of the essay, a 'bandScore' section estimating the likely IELTS band score (based on the task response, coherence, lexical resource, and grammar), and an 'improvements' section outlining specific areas where the essay can be enhanced. Please format your response as a JSON object with 'overallFeedback', 'bandScore', and 'improvements' fields. Here is the essay: "${essay}"`;
+      const prompt = `Imagine that you strict IELTS Examiner and you are tasked with analyzing an IELTS essay based on the task: "${currentTask}". Your goal is to provide feedback on how well the essay meets the requirements of the task. Your response should include an 'overallFeedback' section summarizing the strengths and weaknesses of the essay, a 'bandScore' section estimating the likely IELTS band score (based on the task response, coherence, lexical resource, and grammar), and an 'improvements' section outlining specific areas where the essay can be enhanced. Please format your response as a JSON object with 'overallFeedback', 'bandScore' (in this style - bandScore: number;), and 'improvements' fields. Here is the essay: "${essay}"`;
       const result_feedback = await model.generateContent([prompt]);
 
       const text_feedback = result_feedback.response.text()
@@ -92,6 +92,7 @@ export default function AITaskGenerator() {
         const jsonStringFeedback = text_feedback.slice(startIndex, endIndex);
 
         const jsonResponseFeedback = JSON.parse(jsonStringFeedback);
+        // console.log(jsonResponseFeedback)
         setFeedback(jsonResponseFeedback);
       } else {
         console.error("No JSON found");
@@ -158,8 +159,8 @@ export default function AITaskGenerator() {
               </div>
             </>
           ) : null}
-          <Progress value={((1200 - timeLeft) / 1200) * 100} className="mb-2" />
-          <p>Time left: {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</p>
+          <Progress value={((2400 - timeLeft) / 2400) * 100} className="mb-2" />
+          <p>Time left: {Math.floor(timeLeft /60)}:{(timeLeft % 60).toString().padStart(2, '0')}</p>
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button onClick={generateTask} disabled={isLoading}>
